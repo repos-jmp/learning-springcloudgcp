@@ -1,0 +1,31 @@
+spring:
+  cloud:
+    gcp:
+      config:
+        enabled: true
+        name: frontend
+        profile: cloud
+      trace:
+        enabled: true
+      sql:
+        enabled: true
+        database-name: card-database
+        instance-connection-name: springboot-on-gke:us-west1:card-db-instance
+      logging:
+        enabled: true
+    sleuth:
+      sampler:
+        probability: 1
+  datasource:
+    hikari:
+      maximum-pool-size: 5
+    username: postgres
+    password: badP@$$w0rd
+    jpa:
+      database-platform: org.hibernate.dialect.PostgreSQL9Dialect
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'

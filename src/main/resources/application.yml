@@ -1,0 +1,17 @@
+spring:
+  profiles:
+    active: cloud
+  cloud:
+    gcp:
+      sql:
+        enabled: "false"
+      config:
+        enabled: "false"
+      trace:
+        enabled: "false"
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
