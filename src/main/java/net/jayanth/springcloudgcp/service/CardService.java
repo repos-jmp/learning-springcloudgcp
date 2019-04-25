@@ -13,6 +13,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gcp.core.GcpProjectIdProvider;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.WritableResource;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -41,18 +47,18 @@ public class CardService {
     private GcpProjectIdProvider projectIdProvider;
 
 
-    public CardDTO getCard(String cardId){
+    public CardDTO getACard(String cardId){
         Optional<Card> card = cardRepository.findById(Long.valueOf(cardId));
         if(!card.isPresent())
             throw new EntityNotFoundException();
         return convertCardToDto(card.get());
     }
 
-    public List<CardDTO> getAllCards(){
-        Optional<List<Card>> cards = Optional.ofNullable(cardRepository.findAll());
-        if(!cards.isPresent())
-            throw new EntityNotFoundException();
-        return  convertCardstoDTOs(cards.get());
+    public Page<CardDTO> getCards(String orderBy, String sortDirection, int page, int size){
+
+        Pageable pageable = PageRequest.of(page, size, Sort.Direction.fromString(sortDirection), orderBy);
+        Page<CardDTO> pageofCards = cardRepository.findAll(pageable).map(this::convertCardToDto);
+        return  pageofCards;
     }
 
     public CardDTO updateCard(String cardId, CardDTO cardDTO){
